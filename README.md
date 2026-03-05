@@ -1,2 +1,3 @@
-# college-labs
-A collection of lab programs that have been conducted in my college
+# CS FUNDEMENTALS
+
+My progression of coding skills, algorithm practice, and technical knowledge
