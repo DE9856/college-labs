@@ -1,45 +1,51 @@
 #define MAX 100
 #include <stdio.h>
 
-int a[MAX][MAX], visited[MAX], stack[MAX];
-int top = -1, n;
-
-void dfs(int node){
-    visited[node] = 1;
-
-    for(int i = 0; i < n; i++){
-        if(a[node][i] == 1 && visited[i] == 0){
-            dfs(i);
-        }
-    }
-
-    stack[++top] = node;
-}
+int a[MAX][MAX], indegree[MAX], queue[MAX];
+int front = 0, rear = -1, n;
 
 void toposort(){
-    for(int i = 0; i < n; i++){
-        if(visited[i] == 0){
-            dfs(i);
+    int count = 0;
+    for(int i = 0;i<n;i++){
+        indegree[i]=0;
+        for(int j = 0;j<n;j++)
+            if(a[j][i]==1)
+                indegree[i]++;
+    }
+
+    for(int i = 0;i<n;i++)
+        if(indegree[i]==0)
+            queue[++rear]=i;
+    
+    printf("Topological Order: ");
+    while(front<=rear){
+        int v = queue[front++];
+        printf("%d ", v);
+        count++;
+
+        for(int i = 0;i<n;i++){
+            if(a[v][i]==1){
+                indegree[i]--;
+                if(indegree[i]==0)
+                    queue[++rear] = i;
+            }
         }
     }
 
-    printf("Topological Sort: ");
-    while(top >= 0){
-        printf("%d ", stack[top--] + 1);
-    }
+    if(count!=n)
+        printf("\nCycle Detected, Topological Sort not possible");
+    else
+        printf("\nCycle not detected");
 }
 
 int main(){
-    printf("Enter number of vertices: ");
+    printf("Enter the no. of vertices: ");
     scanf("%d", &n);
 
-    printf("Enter adjacency matrix:\n");
-    for(int i = 0; i < n; i++){
-        for(int j = 0; j < n; j++){
+    printf("Enter the adjacency matrix: \n");
+    for(int i = 0;i<n;i++)
+        for(int j = 0;j<n;j++)
             scanf("%d", &a[i][j]);
-        }
-        visited[i] = 0;
-    }
 
     toposort();
     return 0;
